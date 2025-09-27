@@ -292,9 +292,9 @@ section {
 }
 
 .profile-image:hover {
-    transform: scale(1.03);
     box-shadow: 0 25px 60px rgba(255, 107, 157, 0.4);
 }
+
 
 @keyframes morph {
     0% {

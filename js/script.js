@@ -263,6 +263,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
 
+    // Avatar mouse-follow on hover (non-touch devices)
+    const initAvatarMouseFollow = () => {
+        const avatar = document.querySelector('.profile-image');
+        const hero = document.querySelector('.hero');
+        if (!avatar || !hero) return;
+        // Skip on touch devices to avoid jitter
+        if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
+
+        const maxTranslate = 15; // px
+
+        const handleMove = (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            const nx = (x - cx) / cx; // -1 .. 1
+            const ny = (y - cy) / cy; // -1 .. 1
+            const tx = nx * maxTranslate;
+            const ty = ny * maxTranslate;
+            avatar.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+            avatar.style.willChange = 'transform';
+        };
+
+        const attach = () => hero.addEventListener('mousemove', handleMove);
+        const detach = () => hero.removeEventListener('mousemove', handleMove);
+        const reset = () => {
+            avatar.style.transform = 'translate3d(0, 0, 0)';
+            avatar.style.willChange = '';
+        };
+
+        avatar.addEventListener('mouseenter', attach);
+        avatar.addEventListener('mouseleave', () => {
+            detach();
+            reset();
+        });
+        hero.addEventListener('mouseleave', () => {
+            detach();
+            reset();
+        });
+    };
+
     // Parallax effects removed
     
     // Add animation for section titles
@@ -290,10 +332,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Advanced parallax background effect removed
 
-    // Floating animation for elements
+    // Floating animation for elements (exclude profile-image to preserve CSS morph)
     const addFloatingAnimation = () => {
-        const floatingElements = document.querySelectorAll('.tech-tag, .profile-image');
-        
+        // Ensure profile image keeps its CSS morph animation
+        const avatar = document.querySelector('.profile-image');
+        if (avatar) {
+            // Remove any previous inline animation that could override CSS
+            avatar.style.animation = '';
+        }
+        const floatingElements = document.querySelectorAll('.tech-tag');
         floatingElements.forEach((element, index) => {
             element.style.animation = `float ${3 + (index % 3)}s ease-in-out infinite`;
             element.style.animationDelay = `${index * 0.2}s`;
@@ -302,14 +349,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize visual effects
     addFloatingAnimation();
-    // Advanced floating animations
+    initAvatarMouseFollow();
+    // Advanced floating animations (exclude profile-image)
     const initFloatingEffects = () => {
-        const floatingElements = document.querySelectorAll('.tech-tag, .profile-image, .project-card img');
-        
+        const floatingElements = document.querySelectorAll('.tech-tag, .project-card img');
         floatingElements.forEach((element, index) => {
             const delay = index * 0.3;
             const duration = 4 + (index % 3);
-            
             element.style.animation = `float ${duration}s ease-in-out infinite`;
             element.style.animationDelay = `${delay}s`;
         });
