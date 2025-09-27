@@ -38,6 +38,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Parallax scroll system removed
+
+    // Scroll-triggered reveal animations with Intersection Observer
+    const initScrollReveal = () => {
+        const revealElements = document.querySelectorAll('.project-card, .skill-item, .stat-item, .about-text, .contact-info, .section-title, .hero-content, .hero-image, .footer-content');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) scale(1)';
+                        entry.target.classList.add('revealed');
+                    }, index * 150);
+                    
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Initialize elements
+        revealElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(50px) scale(0.9)';
+            element.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            revealObserver.observe(element);
+        });
+    };
+
+    // Mouse parallax removed
+
+    // Initialize non-parallax effects only
+    initScrollReveal();
+
     // Add active class to nav links on scroll
     const sections = document.querySelectorAll('section');
     const navItems = document.querySelectorAll('.nav-links a');
@@ -156,27 +193,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize skill animations
     animateSkills();
     
-    // Add scroll reveal animation
+    // Enhanced scroll reveal animation with staggered effects
     const scrollReveal = () => {
-        const revealElements = document.querySelectorAll('.reveal');
+        const revealElements = document.querySelectorAll('.reveal, .project-card, .skill-item, .stat-item');
         
         const revealOnScroll = () => {
-            revealElements.forEach(element => {
+            revealElements.forEach((element, index) => {
                 const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
+                const elementVisible = 100;
                 
                 if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('active');
+                    setTimeout(() => {
+                        element.classList.add('active');
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0) scale(1)';
+                    }, index * 100); // Staggered animation
                 }
             });
         };
+        
+        // Initialize elements with hidden state
+        revealElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px) scale(0.95)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
         
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll(); // Check on page load
     };
     
-    // Initialize scroll reveal
-    scrollReveal();
+    // Remove legacy scrollReveal (was duplicate) – using initScrollReveal instead
     
     // Add animation for project cards on hover
     const projectCards = document.querySelectorAll('.project-card');
@@ -202,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
             card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
         });
     });
-    
+
     // Add animation for the hero section
     const heroContent = document.querySelector('.hero-content');
     if (heroContent) {
@@ -215,6 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
             heroContent.style.transform = 'translateY(0)';
         }, 300);
     }
+
+    // Parallax effects removed
     
     // Add animation for section titles
     const sectionTitles = document.querySelectorAll('.section-title');
@@ -238,7 +287,115 @@ document.addEventListener('DOMContentLoaded', function() {
         
         observer.observe(title);
     });
+
+    // Advanced parallax background effect removed
+
+    // Floating animation for elements
+    const addFloatingAnimation = () => {
+        const floatingElements = document.querySelectorAll('.tech-tag, .profile-image');
+        
+        floatingElements.forEach((element, index) => {
+            element.style.animation = `float ${3 + (index % 3)}s ease-in-out infinite`;
+            element.style.animationDelay = `${index * 0.2}s`;
+        });
+    };
+
+    // Initialize visual effects
+    addFloatingAnimation();
+    // Advanced floating animations
+    const initFloatingEffects = () => {
+        const floatingElements = document.querySelectorAll('.tech-tag, .profile-image, .project-card img');
+        
+        floatingElements.forEach((element, index) => {
+            const delay = index * 0.3;
+            const duration = 4 + (index % 3);
+            
+            element.style.animation = `float ${duration}s ease-in-out infinite`;
+            element.style.animationDelay = `${delay}s`;
+        });
+    };
+
+    // Scroll-based background color transitions
+    const initScrollColorTransitions = () => {
+        const sections = document.querySelectorAll('section');
+        
+        const handleColorTransition = () => {
+            const scrollPercent = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
+            
+            // Subtle background color shift based on scroll
+            const hue = 320 + (scrollPercent * 40); // Pink to purple range
+            document.body.style.background = `linear-gradient(135deg, hsl(${hue}, 20%, 98%) 0%, hsl(${hue + 10}, 25%, 95%) 100%)`;
+        };
+
+        let colorTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!colorTicking) {
+                requestAnimationFrame(() => {
+                    handleColorTransition();
+                    colorTicking = false;
+                });
+                colorTicking = true;
+            }
+        }, { passive: true });
+    };
+
+    // Initialize advanced effects
+    initFloatingEffects();
+    initScrollColorTransitions();
 });
+
+// Enhanced CSS animations
+const advancedStyle = document.createElement('style');
+advancedStyle.textContent = `
+    @keyframes float {
+        0%, 100% { 
+            transform: translateY(0px) rotate(0deg) scale(1); 
+        }
+        25% { 
+            transform: translateY(-8px) rotate(0.5deg) scale(1.02); 
+        }
+        50% { 
+            transform: translateY(-15px) rotate(-0.5deg) scale(1.01); 
+        }
+        75% { 
+            transform: translateY(-5px) rotate(0.3deg) scale(1.02); 
+        }
+    }
+    
+    @keyframes parallaxFade {
+        0% {
+            opacity: 0;
+            transform: translateY(60px) scale(0.8);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .revealed {
+        animation: parallaxFade 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .parallax-element {
+        will-change: transform;
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+    
+    .hero-content, .hero-image {
+        transition: transform 0.1s ease-out;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+`;
+document.head.appendChild(advancedStyle);
 
 // Add loading animation
 window.addEventListener('load', () => {

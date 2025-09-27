@@ -192,8 +192,28 @@ section {
     width: 25px;
     height: 3px;
     margin: 5px 0;
-    background-color: var(--dark-color);
-    transition: var(--transition);
+    background-color: var(--primary-color);
+    transition: transform 0.45s ease, opacity 0.35s ease, background-color 0.3s ease;
+    transform-origin: center;
+}
+
+/* Morph hamburger into X when active */
+.hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Improve tap target and stacking */
+.hamburger {
+    padding: 6px 2px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Hero Section */
@@ -694,6 +714,14 @@ section {
     .social-links {
         justify-content: center;
     }
+
+    /* Tighter spacing on tablets */
+    section {
+        padding: 80px 0;
+    }
+    .container {
+        padding: 0 16px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -747,6 +775,21 @@ section {
     .contact-form {
         width: 100%;
     }
+
+    /* Tablet hero spacing and image sizing */
+    .hero {
+        padding: 140px 0 80px;
+    }
+    .profile-image {
+        width: 320px;
+        height: 320px;
+    }
+    .project-image {
+        height: 180px;
+    }
+    .project-info {
+        padding: 20px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -769,5 +812,39 @@ section {
     .profile-placeholder {
         width: 300px;
         height: 300px;
+    }
+
+    /* Phone layout refinements */
+    .hero {
+        padding: 120px 0 60px;
+    }
+    .container {
+        padding: 0 14px;
+    }
+    section {
+        padding: 60px 0;
+    }
+    .hero-description {
+        font-size: 1rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .profile-image {
+        width: 240px;
+        height: 240px;
+    }
+    .project-image {
+        height: 160px;
+    }
+    .project-links {
+        flex-wrap: wrap;
+    }
+    .btn-small {
+        padding: 8px 16px;
+    }
+    .about-content,
+    .contact-content {
+        gap: 24px;
     }
 }
